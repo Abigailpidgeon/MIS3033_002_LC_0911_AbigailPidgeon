@@ -1,74 +1,80 @@
-﻿// MIS 3033 002
-// September 11 2023
-// Abigail Pidgeon
+﻿using a;
 using b;
-using a;
 using System.Text.Json;
-using System.Xml.Linq;
 
-Console.WriteLine("Entity Famework");
+Console.WriteLine("Sep 13, student db");
+// db manipulations => LINQ (collection extension funtions)=> lambda expression=>delegate
+// lamda expression, arrow function => function, shortcut way to write a function
 
-StudentDB studb;// complex
-studb = new StudentDB();// we connect to database
+//assignment(accumulator assignment)
+//how to define functions
+//simple vs complex 
 
-Student stu;
-stu = new Student() { Id="s126",Name="Abigail Pidgeon",Age=21};
-//stu.name = "Abigail Pidgeon"
+StudentDB db;//complex 
+db = new StudentDB();
 
-//studb.StudentsTbl.Add(stu);//studb.studentstbl in the computer memoery
-//studb.SaveChanges();
-
-// static
-Student stu2;//complex
-stu2 = new Student() { Id = "S1", Name = "Dolly Parton", Age = 67 };
-Console.WriteLine(Student.Instructor);
-
-// anonymos class type
-var r1 = new { Id = "s2", Name = "Travis Kelce" };
-Console.WriteLine(r1.Name);
-
-// file JSON
 string filepath = "data.txt";
-File.WriteAllText(filepath, "200");
-
-// {} []
-// {}, holds one record
-// []: collection, holds multiple records but can be null
-
-string outMesStr;
 
 var opt = new JsonSerializerOptions();
-opt.WriteIndented = true;// member field 
+opt.WriteIndented= true;
 
-outMesStr = JsonSerializer.Serialize(stu2,opt);//static //function overload
-Console.WriteLine(outMesStr);
-File.WriteAllText(filepath, outMesStr);
+string jsonstr;
 
-//[]
-var r2 = studb.StudentsTbl.Take(1);//r2 collection
-outMesStr = JsonSerializer.Serialize(r2, opt);//static //function overload
-Console.WriteLine(outMesStr);
-File.WriteAllText(filepath, outMesStr);
+//collection extension functions 
+var r1 = db.StudentsTbl.Take(3).FirstOrDefault();//student
 
-// delegate, lambda expression
-// lambda expression: is a way to write a function. it is a shortcut to write said function.
-// arrow function
+//var r3 = db.StudentsTbl.Min(x=>x.Age);//student ctrl d
 
-int age1;// int datatype, age1: variable 
-int age2;// 
+var r3 = db.StudentsTbl.ToList().MinBy(x=>x.Age);//student ctrl d
 
-Student stu3;
-stu3 = new Student() { Id = "S2", Name = "Jason Kelece", Age = 48 };
-//Console.WriteLine(stu3.ToString());
+jsonstr = JsonSerializer.Serialize(r3, opt);
+File.WriteAllText(filepath, jsonstr);
 
-bool CheckAge(Student s)
+bool r2;
+r2 = checkage(r1);
+Console.WriteLine(r2);
+
+r2 = checkid(r1);
+Console.WriteLine(r2);
+
+funtype1 funcard1;//funtype1 complex
+
+funcard1 = checkage;
+r2 = funcard1(r1);
+Console.WriteLine(r2);
+
+funcard1 = checkid;
+r2 = funcard1(r1);
+Console.WriteLine(r2);
+
+funtype1 funcard2;// complex, null
+funcard2 = (Student x) => { return x.Name.ToLower() == "david"; };//arrow function,anonymous function lambda expresion shorcut way to write function
+
+funcard2 = (x) => { return x.Name.ToLower() == "david"; };//arrow function,anonymous function
+
+funcard2 = x => { return x.Name.ToLower() == "david"; };//arrow function,anonymous function, only applys when u have one paramater
+
+funcard2 = x => x.Name.ToLower() == "david";//arrow function,anonymous function only applies when u have one line of code in the function bidy
+
+funcard2 = x => x.Age == 20; //arrow function,anonymous function 
+
+r2 = funcard2(r1);
+Console.WriteLine(r2);
+
+
+// the above code is for database manipulation
+// the below code is function definition 
+
+bool checkage(Student s)
 {
-    return s.Age == 21;
+    return s.Age == 20;
 }
 
-bool CheckID(Student s)
+bool checkid(Student s)
 {
-    return s.Id == "s126";
+    return s.Id.ToLower() == "s126";
 }
 
-Console.WriteLine(CheckAge(stu));
+// delegate to define a function type 
+
+delegate bool funtype1(Student x);//funtype1 car,complex 
